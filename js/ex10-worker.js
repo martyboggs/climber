@@ -21,22 +21,22 @@ self.onmessage = function (e) {
 				// type: 'box',
 				size: [platforms[i].width, 1, platforms[i].depth],
 				pos: [platforms[i].x, platforms[i].y, platforms[i].z],
-				move: true,
+				move: false,
 				world: world,
 				name: lastName
 			});
 
 			if (platforms[i].rope) {
 				for (var j = 0; j < platforms[i].rope / 5; j += 1) {
-					// var bodyRope = new OIMO.Body({
-					// 	type: 'cylinder',
-					// 	size: [0.25, 4],
-					// 	pos: [platforms[i].x, platforms[i].y - 1 - 2.5 - 5 * j, platforms[i].z],
-					// 	move: true,
-					// 	world: world,
-					// 	name: 'p' + i + 'r' + j
-					// });
-// console.log(lastName, bodyRope.name);
+					var bodyRope = new OIMO.Body({
+						type: 'cylinder',
+						size: [0.25, 4],
+						pos: [platforms[i].x, platforms[i].y - 1 - 2.5 - 5 * j, platforms[i].z],
+						move: true,
+						world: world,
+						name: 'p' + i + 'r' + j
+					});
+
 					// var pos1Y = pos1Y ? -2 : -0.5;
 					// new OIMO.Link({
 					// 	world: world,
@@ -59,6 +59,7 @@ self.onmessage = function (e) {
 				}
 			}
 		}
+	var first = true;
 		var first = true;
 	}
 
@@ -75,33 +76,26 @@ self.onmessage = function (e) {
 		if (b.sleeping) {
 			minfo[n+7] = 1;
 		} else {
+if (first) console.log(b.name);
 			minfo[n+7] = 0;
 			n = 8*i;
 			// get position
 			pos = b.getPosition();
-			// if (b.name === 'joint') {
-			// 	minfo[n+0] = pos[0].x;
-			// 	minfo[n+1] = pos[0].y;
-			// 	minfo[n+2] = pos[0].z;
-			// 	minfo[n+3] = pos[1].x;
-			// 	minfo[n+4] = pos[1].y;
-			// 	minfo[n+5] = pos[1].z;
-			// } else {
-				minfo[n+0] = pos.x//.toFixed(3)*1;
-				minfo[n+1] = pos.y//.toFixed(3)*1;
-				minfo[n+2] = pos.z//.toFixed(3)*1;
-				// get Quaternion
-				quad = b.getQuaternion();
-				//if(i==2)console.log(pos.x)
-				minfo[n+3] = quad.x//.toFixed(3)*1;
-				minfo[n+4] = quad.y//.toFixed(3)*1;
-				minfo[n+5] = quad.z//.toFixed(3)*1;
-				minfo[n+6] = quad.w//.toFixed(3)*1;
-			// }
+			minfo[n+0] = pos.x//.toFixed(3)*1;
+			minfo[n+1] = pos.y//.toFixed(3)*1;
+			minfo[n+2] = pos.z//.toFixed(3)*1;
+			// get Quaternion
+			quad = b.getQuaternion();
+			//if(i==2)console.log(pos.x)
+			minfo[n+3] = quad.x//.toFixed(3)*1;
+			minfo[n+4] = quad.y//.toFixed(3)*1;
+			minfo[n+5] = quad.z//.toFixed(3)*1;
+			minfo[n+6] = quad.w//.toFixed(3)*1;
 		}
 		i++;
 		b=b.next;
 	}
+// minfo has highest platforms at the beginning
 
 	f[1] = Date.now();
 	if (f[1]-1000>f[0]){ f[0]=f[1]; fps=f[2]; f[2]=0; } f[2]++;

@@ -35,24 +35,14 @@ var first = true;
 		// Get fresh data from the worker
 		minfo = e.data.minfo;
 
-if (first) { first = false;	console.log(minfo); }
 		// Update rendering meshes
 		var n, mesh, i = meshes.length;
-		while (!i) {
-			mesh = meshes[n];
-			// console.log(mesh.type);
+		while (i > 0) {
+			i -= 1;
+			mesh = meshes[i];
 			n = i*8;
-			if (minfo[n+7] !== 1) {
-				// if (mesh.type === 'line') {
-				// 	mesh.geometry.vertices[0].set(minfo[n+0], minfo[n+1], minfo[n+2]);
-				// 	mesh.geometry.vertices[1].set(minfo[n+3], minfo[n+4], minfo[n+5]);
-				// 	mesh.geometry.verticesNeedUpdate = true;
-				// } else {
-					mesh.position.set(minfo[n+0], minfo[n+1], minfo[n+2]);
-					mesh.quaternion.set(minfo[n+3], minfo[n+4], minfo[n+5], minfo[n+6]);
-				// }
-			}
-			n -= 1;
+			mesh.position.set(minfo[n+0], minfo[n+1], minfo[n+2]);
+			mesh.quaternion.set(minfo[n+3], minfo[n+4], minfo[n+5], minfo[n+6]);
 		}
 
 		// If the worker was faster than the time step (dt seconds), we want to delay the next timestep
@@ -228,6 +218,7 @@ if (first) { first = false;	console.log(minfo); }
 		platform.position.set(platforms[i].x, platforms[i].y, platforms[i].z);
 		platform.receiveShadow = true;
 		platform.castShadow = true;
+		platform.name = 'p' + i;
 		scene.add(platform);
 		meshes.push(platform);
 
@@ -236,7 +227,7 @@ if (first) { first = false;	console.log(minfo); }
 				var rope = new THREE.Mesh(new THREE.CylinderGeometry(0.1, 0.1, 4), ropeMaterial);
 				rope.position.set(platforms[i].x, platforms[i].y - 1 - 2.5 - 5 * j, platforms[i].z);
 				scene.add(rope);
-				// meshes.push(rope);
+				meshes.push(rope);
 
 				// var geometry = new THREE.Geometry();
 				// geometry.vertices.push(new THREE.Vector3(0, 0, 0), new THREE.Vector3(0, 0, 0));
@@ -265,6 +256,7 @@ if (first) { first = false;	console.log(minfo); }
 		}
 	}
 console.log(meshes.length);
+
 	// start oimo loop
 	// parameters
 	var dt = 1/60;
@@ -290,7 +282,6 @@ console.log(meshes.length);
 	}
 
 	function render() {
-		console.log(meshes[0].position.y);
 		collided = false;
 		var camAngle = Math.round(camera.rotation.z) === 0 ? camera.rotation.y : -camera.rotation.y + Math.PI;
 		if (document.pointerLockElement === renderer.domElement) {
@@ -320,6 +311,11 @@ console.log(meshes.length);
 					camera.position.x += 0.1 * Math.sin(camAngle);
 				}
 			}
+						if (keyboard.pressed('r')) {
+							camera.position.y += 0.1;
+							holdingRope = true;
+						}
+
 			if (keyboard.pressed('a')) {
 				camera.position.z += 0.1 * Math.sin(camAngle);
 				camera.position.x -= 0.1 * Math.cos(camAngle);
