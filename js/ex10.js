@@ -27,18 +27,18 @@
 	// Create worker
 	var worker = new Worker('js/ex10-worker.js');
 	worker.postMessage = worker.webkitPostMessage || worker.postMessage;
-var first = true;
 	var sendTime; // Time when we sent last message
-	worker.onmessage = function(e) {
+	worker.onmessage = function (e) {
+
 		oimoInfo = e.data.perf;
 
 		// Get fresh data from the worker
 		minfo = e.data.minfo;
 
 		// Update rendering meshes
-		var n, mesh, i = meshes.length;
-		while (i > 0) {
-			i -= 1;
+		var n = 0, mesh;
+
+		for (var i = 0; i < meshes.length; i += 1) {
 			mesh = meshes[i];
 			n = i*8;
 			mesh.position.set(minfo[n+0], minfo[n+1], minfo[n+2]);
@@ -53,7 +53,7 @@ var first = true;
 
 	function sendDataToWorker(){
 		sendTime = Date.now();
-		worker.postMessage({ minfo : minfo },[minfo.buffer]);
+		worker.postMessage({minfo : minfo}, [minfo.buffer]);
 	}
 
 	var pauseScreen = document.createElement('div');
@@ -213,6 +213,11 @@ var first = true;
 	var outsideAngle = 0;
 	var meshes = [];
 
+// meshes[0] is bottom
+// meshes[1] is top
+// meshes[27] is at the bottom, but belongs at the very top, wtf
+
+
 	for (var i = 0; i < platforms.length; i += 1) {
 		var platform = new THREE.Mesh(new THREE.BoxGeometry(platforms[i].width, 1, platforms[i].depth), platformMaterial);
 		platform.position.set(platforms[i].x, platforms[i].y, platforms[i].z);
@@ -224,16 +229,11 @@ var first = true;
 
 		if (platforms[i].rope) {
 			for (var j = 0; j < platforms[i].rope / 5; j += 1) {
-				var rope = new THREE.Mesh(new THREE.CylinderGeometry(0.1, 0.1, 4), ropeMaterial);
-				rope.position.set(platforms[i].x, platforms[i].y - 1 - 2.5 - 5 * j, platforms[i].z);
+				var rope = new THREE.Mesh(new THREE.CylinderGeometry(0.1, 0.1, 5), ropeMaterial);
+				rope.position.set(platforms[i].x, platforms[i].y - 0.5 - 2.5 - 5 * j, platforms[i].z);
+				rope.name = 'p' + i + 'r' + j;
 				scene.add(rope);
 				meshes.push(rope);
-
-				// var geometry = new THREE.Geometry();
-				// geometry.vertices.push(new THREE.Vector3(0, 0, 0), new THREE.Vector3(0, 0, 0));
-				// var line = new THREE.Line(geometry, new THREE.LineBasicMaterial({color: 'black'}));
-				// scene.add(line);
-				// // meshes.push(line);
 			}
 		}
 		// coins
@@ -255,7 +255,6 @@ var first = true;
 			coins.push(coin);
 		}
 	}
-console.log(meshes.length);
 
 	// start oimo loop
 	// parameters
@@ -311,11 +310,6 @@ console.log(meshes.length);
 					camera.position.x += 0.1 * Math.sin(camAngle);
 				}
 			}
-						if (keyboard.pressed('r')) {
-							camera.position.y += 0.1;
-							holdingRope = true;
-						}
-
 			if (keyboard.pressed('a')) {
 				camera.position.z += 0.1 * Math.sin(camAngle);
 				camera.position.x -= 0.1 * Math.cos(camAngle);
@@ -362,6 +356,7 @@ console.log(meshes.length);
 		// win
 		if (camera.position.y > 226 && !won) {
 			won = true;
+			worker = null;
 			holdingRope = false;
 			outside.visible = true;
 		}
@@ -411,7 +406,7 @@ console.log(meshes.length);
 					break;
 				}
 			}
-			// ropes collisions
+			// rope collisions
 			holdingRope = false;
 			for (var i = 0; i < platforms.length; i += 1) {
 				if (
@@ -422,6 +417,7 @@ console.log(meshes.length);
 					camera.position.z > platforms[i].z - 0.4 &&
 					camera.position.z < platforms[i].z + 0.4
 				) {
+					ropeSegment = platforms[i].y
 					holdingRope = true;
 					onGround = false;
 					velY = 0;
@@ -528,6 +524,13 @@ console.log(meshes.length);
 			"Render: " + fpsint +" fps<br>"
 		].join("\n");
 		document.getElementById("info").innerHTML = info;
+	}
+	function orientCylinder(cylinder, pointX, pointY) {
+		var direction = new THREE.Vector3().subVectors( pointY, pointX );
+		var arrow = new THREE.ArrowHelper( direction, pointX );
+		cylinder.scale.y = direction.length() / 5;
+		cylinder.rotation = arrow.rotation.clone();
+		cylinder.position = new THREE.Vector3().addVectors( pointX, direction.multiplyScalar(0.5) );
 	}
 
 }());
