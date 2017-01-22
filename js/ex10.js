@@ -140,7 +140,7 @@
 	// set up objects
 	var platforms = [
 		{x: 5.5,  y: 0,   z: 1,    rope: 0,   width: 5,  depth: 10}, // just above ground level
-		{x: 8.5,  y: 10,  z: -8.5, rope: 5,   width: 4,  depth: 3}, // isolated
+		{x: 8.5,  y: 10,  z: -8.5, rope: 0,   width: 4,  depth: 3}, // isolated
 		{x: 5,    y: 19,  z: 8,    rope: 15,  width: 4,  depth: 4},
 		{x: -6,   y: 25,  z: 8,    rope: 0,   width: 8,  depth: 2}, // no rope
 		{x: 4,    y: 38,  z: 5,    rope: 25,  width: 10, depth: 4}, // WIDE
@@ -156,11 +156,11 @@
 		{x: -4,   y: 70,  z: -4,   rope: 15,  width: 12, depth: 11}, // rope = deadend, big platform
 		{x: -8,   y: 75,  z: 9,    rope: 20,  width: 2,  depth: 2}, //
 		{x: -9,   y: 72,  z: 6,    rope: 10,  width: 2,  depth: 2}, //
-		{x: 5,    y: 74,  z: -6,   rope: 5,   width: 2,  depth: 2}, // climbing
-		{x: 9,    y: 77,  z: -2.5, rope: 5,   width: 2,  depth: 15}, // climbing
-		{x: 7,    y: 80,  z: 8,    rope: 5,   width: 4,  depth: 4}, // climbing
+		{x: 5,    y: 74,  z: -6,   rope: 0,   width: 2,  depth: 2}, // climbing
+		{x: 9,    y: 77,  z: -2.5, rope: 0,   width: 2,  depth: 15}, // climbing
+		{x: 7,    y: 80,  z: 8,    rope: 0,   width: 4,  depth: 4}, // climbing
 		{x: -6,   y: 80,  z: -2,   rope: 0,   width: 4,  depth: 4}, // jumping
-		{x: 4,    y: 84,  z: -8,   rope: 5,   width: 4,  depth: 4}, // jumping
+		{x: 4,    y: 84,  z: -8,   rope: 0,   width: 4,  depth: 4}, // jumping
 		{x: -8,   y: 87,  z: -7.5, rope: 0,   width: 4,  depth: 3}, // jumping
 		{x: 3,    y: 90,  z: -4,   rope: 0,   width: 4,  depth: 4}, // jumping
 		{x: -8,   y: 93,  z: 2.5,  rope: 0,   width: 4,  depth: 3}, // jumping
