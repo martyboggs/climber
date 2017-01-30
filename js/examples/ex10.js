@@ -101,9 +101,8 @@
 	var player = controls.getObject();
 	scene.add(player);
 
-	player.position.y = 97;
-	player.position.x = -7;
-	player.position.z = -7;
+	player.position.set(4.5, 6, 1);
+
 	// camera.rotation.order = 'ZYX';
 
 	var sounds = {
@@ -126,7 +125,7 @@
 	var holdingRope = false;
 	var distanceFell = 0;
 	var collided = false;
-	var won = true;
+	var won = false;
 	var score = 0;
 	var deaths = 0;
 	var dead = false;
@@ -397,7 +396,7 @@ amounted to nothing
 		if (deadTimer === 0) {
 			dead = false;
 			deadTimer = 120;
-			player.position.set(5.5, 6, 1);
+			player.position.set(4.5, 6, 1);
 			deathsAdd(1);
 		}
 
